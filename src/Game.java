@@ -54,12 +54,22 @@ public class Game extends Canvas implements Runnable{
     @Override
     //the code that gets exicuted when we start our game
     public void run() {
+
+        long lastTime = System.nanoTime();
+        final double ns = 1000000000.0 / 60.0;
+        double delta = 0;
+
         while (running) {
-            //logic  //at a certain speed
-            update();
-            //display images //as fast a possible
+            long now = System.nanoTime();
+            delta += (now - lastTime) / ns;
+            lastTime = now;
+            while (delta >= 1) {
+                update();
+                --delta;
+            }
             render();
         }
+        stop();
     }
 
     public  void update() {
@@ -73,10 +83,16 @@ public class Game extends Canvas implements Runnable{
             createBufferStrategy(3);
             return;
         }
+        screen.clear();
+        screen.render();
+
+        for (int i = 0; i < pixels.length; ++i) {
+            pixels[i] = screen.pixels[i];
+        }
+
         //creating a link between the buffer and the graphics
         Graphics g = bs.getDrawGraphics();
-        g.setColor(Color.BLACK);
-        g.fillRect(0,0,getWidth(),getHeight());
+        g.drawImage(image,0,0, getWidth(), getHeight(), null);
             //here is where we do all the graphics
         g.dispose(); //remove the graphics we arnt using anymore
         bs.show(); //make the next available buffer visible
