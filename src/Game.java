@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
@@ -17,7 +18,9 @@ public class Game extends Canvas implements Runnable{
     //a sub process
     private Thread thread;
     private JFrame frame;
+    private Keyboard key;
     private boolean running = false;
+
     private Screen screen;
 
     private BufferedImage image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB);
@@ -33,6 +36,9 @@ public class Game extends Canvas implements Runnable{
 
         screen = new Screen(width,height);
         frame = new JFrame();
+        key = new Keyboard();
+
+        addKeyListener(key);
 
     }
 
@@ -86,7 +92,13 @@ public class Game extends Canvas implements Runnable{
         stop();
     }
 
+    int x = 0;
+    int y = 0;
+
     public  void update() {
+        key.update();
+        ++x;
+        ++y;
 
     }
 
@@ -98,7 +110,7 @@ public class Game extends Canvas implements Runnable{
             return;
         }
         screen.clear();
-        screen.render();
+        screen.render(x, y);
 
         for (int i = 0; i < pixels.length; ++i) {
             pixels[i] = screen.pixels[i];
@@ -122,7 +134,7 @@ public class Game extends Canvas implements Runnable{
         game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         game.frame.setLocationRelativeTo(null);
         game.frame.setVisible(true);
-
+        game.requestFocus();
         game.start();
     }
 }
