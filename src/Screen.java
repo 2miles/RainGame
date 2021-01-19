@@ -40,7 +40,7 @@ public class Screen {
                 //when  x>>4 gets to 63 loop back around to 0
                 int tileIndex = ((xx >> 4) & MAP_SIZE_MASK) + ((yy >> 4) & MAP_SIZE_MASK) * MAP_SIZE;
                 //int tileIndex = (x / 16) + (y / 16) * 64;
-                pixels[x + y * width] = tiles[tileIndex];
+                pixels[x + y * width] = Sprite.grass.pixels[(x&15) + (y&15) * Sprite.grass.SIZE];
             }
         }
     }
