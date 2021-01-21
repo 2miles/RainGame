@@ -33,7 +33,6 @@ public class SpriteSheet {
     */
 
     private void load(){
-
         try {
             BufferedImage image = ImageIO.read(new File(path));
             int w = image.getWidth();

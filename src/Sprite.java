@@ -1,12 +1,13 @@
 
 
 public class Sprite {
-    public final int SIZE;
-    private int x, y;
-    public int[] pixels;
+    public final int SIZE; //side length of a square sprite
+    private int x, y; //location of the top left corner of a sprite
+    public int[] pixels;  //and array of SIZE*SIZE pixels(ints)
     private SpriteSheet sheet;
 
     public static Sprite grass = new Sprite(16, 0,0, SpriteSheet.tiles);
+    public static Sprite voidSprite = new Sprite(16, 0x1B87E0);
 
     public Sprite(int size, int x, int y, SpriteSheet sheet) {
         SIZE = size;
@@ -16,6 +17,19 @@ public class Sprite {
         this.sheet = sheet;
         load();
     }
+
+    public Sprite(int size, int color) {
+        SIZE = size;
+        pixels = new int [SIZE * SIZE];
+        setColor(color);
+    }
+
+    private void setColor(int color) {
+        for (int i = 0; i < SIZE*SIZE; ++i) {
+            pixels[i] = color;
+        }
+    }
+
 
     //extracting a single sprite out of our sprite sheet
     //accessing the entire sprite sheet by pixel and

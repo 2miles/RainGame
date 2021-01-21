@@ -19,6 +19,7 @@ public class Game extends Canvas implements Runnable{
     private Thread thread;
     private JFrame frame;
     private Keyboard key;
+    private Level level;
     private boolean running = false;
 
     private Screen screen;
@@ -37,6 +38,7 @@ public class Game extends Canvas implements Runnable{
         screen = new Screen(width,height);
         frame = new JFrame();
         key = new Keyboard();
+        level = new RandomLevel(64,64);
 
         addKeyListener(key);
 
@@ -68,6 +70,8 @@ public class Game extends Canvas implements Runnable{
         double delta = 0;
         int frames = 0;
         int updates = 0;
+
+        requestFocus();
 
         while (running) {
             long now = System.nanoTime();
@@ -103,6 +107,7 @@ public class Game extends Canvas implements Runnable{
         if (key.right) ++x;
     }
 
+    //main render method
     public void render() {
         //retrive the bufferstratagy of the canvas object that we are
         BufferStrategy bs = getBufferStrategy();
@@ -111,7 +116,7 @@ public class Game extends Canvas implements Runnable{
             return;
         }
         screen.clear();
-        screen.render(x, y);
+        level.render(x,y, screen);
 
         for (int i = 0; i < pixels.length; ++i) {
             pixels[i] = screen.pixels[i];
@@ -135,7 +140,7 @@ public class Game extends Canvas implements Runnable{
         game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         game.frame.setLocationRelativeTo(null);
         game.frame.setVisible(true);
-        game.requestFocus();
+        //game.requestFocus();
         game.start();
     }
 }
