@@ -20,6 +20,7 @@ public class Game extends Canvas implements Runnable{
     private JFrame frame;
     private Keyboard key;
     private Level level;
+    private Player player;
     private boolean running = false;
 
     private Screen screen;
@@ -39,6 +40,7 @@ public class Game extends Canvas implements Runnable{
         frame = new JFrame();
         key = new Keyboard();
         level = new RandomLevel(64,64);
+        player = new Player(key);
 
         addKeyListener(key);
 
@@ -96,15 +98,9 @@ public class Game extends Canvas implements Runnable{
         stop();
     }
 
-    int x = 0;
-    int y = 0;
-
     public  void update() {
         key.update();
-        if (key.up) --y;
-        if (key.down) ++y;
-        if (key.left) --x;
-        if (key.right) ++x;
+        player.update();
     }
 
     //main render method
@@ -116,7 +112,12 @@ public class Game extends Canvas implements Runnable{
             return;
         }
         screen.clear();
-        level.render(x,y, screen);
+        int xScroll = player.x - screen.width / 2;
+        int yScroll = player.y - screen.height / 2;
+
+
+        level.render(xScroll, yScroll, screen);
+        player.render(screen);
 
         for (int i = 0; i < pixels.length; ++i) {
             pixels[i] = screen.pixels[i];
@@ -126,6 +127,9 @@ public class Game extends Canvas implements Runnable{
         Graphics g = bs.getDrawGraphics();
         g.drawImage(image,0,0, getWidth(), getHeight(), null);
             //here is where we do all the graphics
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Verdana", 0, 50));
+        g.drawString("X: " + player.x + ", Y: " + player.y, 10, 480);
         g.dispose(); //remove the graphics we arnt using anymore
         bs.show(); //make the next available buffer visible
 
